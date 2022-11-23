@@ -1,0 +1,187 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model LicenseHistory {
+  id          Int      @id(map: "PK_f7e3f66b3855d8604968753d1ed") @default(autoincrement())
+  usageStatus String   @map("usage_status") @db.VarChar
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  userId      Int?
+  licenseId   Int?
+  license     License? @relation(fields: [licenseId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_38367e0d1c08e72c6dcbb84b807")
+  user        User?    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_575d0a58e0c332892659055e8dc")
+
+  @@map("license_histories")
+}
+
+model License {
+  id               Int              @id(map: "PK_da5021501ce80efa03de6f40086") @default(autoincrement())
+  symbol           String           @db.VarChar
+  name             String           @db.VarChar
+  purchasedAt      DateTime?        @map("purchased_at") @db.Date
+  expiredAt        DateTime?        @map("expired_at") @db.Date
+  deletedAt        DateTime?        @map("deleted_at") @db.Timestamptz(6)
+  createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime         @default(now()) @map("updated_at") @db.Timestamptz(6)
+  adminId          Int?             @map("admin_id")
+  admin            Admin?           @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_4cf8941abbe3057dcface62688f")
+  licenseHistories LicenseHistory[]
+  userLicense      UserLicense?
+
+  @@map("licenses")
+}
+
+model MachineHistory {
+  id          Int      @id(map: "PK_6e68d67930a4dd55255acda15e1") @default(autoincrement())
+  usageStatus String   @map("usage_status") @db.VarChar
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  userId      Int?     @map("user_id")
+  machineId   Int?     @map("machine_id")
+  machine     Machine? @relation(fields: [machineId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_2e708dadcc9855da6690f6e7199")
+  user        User?    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_66400fe3c634514cdd836d4e4b3")
+
+  @@map("machine_histories")
+}
+
+model Machine {
+  id               Int              @id(map: "PK_7b0817c674bb984650c5274e713") @default(autoincrement())
+  symbol           String           @db.VarChar
+  category         String           @db.VarChar
+  name             String           @db.VarChar
+  purchasedAt      DateTime?        @map("puchased_at") @db.Date
+  deletedAt        DateTime?        @map("deleted_at") @db.Timestamptz(6)
+  createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime         @default(now()) @map("updated_at") @db.Timestamptz(6)
+  adminId          Int?             @map("admin_id")
+  admin            Admin?           @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0e00fc2bf076a4cbf59f5449d14")
+  machineHistories MachineHistory[]
+  userMachines     UserMachine?
+
+  @@map("machines")
+}
+
+model AdminMailSetting {
+  id                          Int                         @id(map: "PK_76b7db6ecad3c6d31be12563863") @default(autoincrement())
+  title                       String                      @db.VarChar
+  bodyText                    String                      @map("bodt_text") @db.VarChar
+  monthlySendDay              Int
+  isValidSendMail             Boolean                     @map("is_valid_send_mail")
+  isValidRemind               Boolean                     @map("is_valid_remind")
+  deletedAt                   DateTime?                   @map("deleted_at") @db.Timestamptz(6)
+  createdAt                   DateTime                    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                   DateTime                    @default(now()) @map("updated_at") @db.Timestamptz(6)
+  adminId                     Int?                        @unique(map: "REL_9f18bb3405f6a46e962a49081b") @map("admin_id")
+  admin                       Admin?                      @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_9f18bb3405f6a46e962a49081bd")
+  adminMonthlySurveyHistories AdminMonthlySurveyHistory[]
+
+  @@map("admin_mail_settings")
+}
+
+model AdminMonthlySurveyCheck {
+  id                          Int                        @id(map: "PK_38fa9052ffc872b5d66453d0d13") @default(autoincrement())
+  reasonForApproval           String?                    @map("reason_for_approval") @db.VarChar
+  createdAt                   DateTime                   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                   DateTime                   @default(now()) @map("updated_at") @db.Timestamptz(6)
+  adminMonthlySurveyHistoryId Int?                       @map("admin_monthly_survey_history_id")
+  adminMonthlySurveyHistory   AdminMonthlySurveyHistory? @relation(fields: [adminMonthlySurveyHistoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0e199c7a5b1a45fcbdda174cd98")
+
+  @@map("admin_monthly_survey_checks")
+}
+
+model AdminMonthlySurveyHistory {
+  id                       Int                       @id(map: "PK_ccff49158816a31576f0e72d23d") @default(autoincrement())
+  createdAt                DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                DateTime                  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  adminMailSettingId       Int?                      @map("admin_mail_setting_id")
+  adminMailSetting         AdminMailSetting?         @relation(fields: [adminMailSettingId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c866199ab0a3a0ae74f0d749ddf")
+  adminMonthlySurveyChecks AdminMonthlySurveyCheck[]
+  userMonthlySurveyAnswers UserMonthlySurveyAnswer[]
+
+  @@map("admin_monthly_survey_histories")
+}
+
+model Admin {
+  id               Int               @id(map: "PK_6b031fcd0863e3f6b44230163f9") @default(autoincrement())
+  name             String            @db.VarChar
+  deletedAt        DateTime?         @map("deleted_at") @db.Timestamptz(6)
+  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime          @default(now()) @map("updated_at") @db.Timestamptz(6)
+  licenses         License[]
+  machines         Machine[]
+  adminMailSetting AdminMailSetting?
+  user             User?
+
+  @@map("admins")
+}
+
+model UserLicense {
+  id        Int       @id(map: "PK_f9fdeafeac79f9c3ef6acbca1f2") @default(autoincrement())
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+  userId    Int?      @map("user_id")
+  licenseId Int?      @unique() @map("license_id")
+  user      User?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_1f236ee512d052a2d30b16ca88c")
+  license   License?  @relation(fields: [licenseId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_58676d44946231dc974adc3ac7a")
+
+  @@map("user_licenses")
+}
+
+model UserMachine {
+  id        Int       @id(map: "PK_f16d4070d0c9b64ed9db4c86e3b") @default(autoincrement())
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+  userId    Int?      @map("user_id")
+  machineId Int?      @unique() @map("machine_id")
+  user      User?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_23686370ce613154537877407d7")
+  machine   Machine?  @relation(fields: [machineId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_5edc031f5f5034ff19b34eadd93")
+
+  @@map("user_machines")
+}
+
+model UserMonthlySurveyAnswer {
+  id                          Int                        @id(map: "PK_806bfcf4cd92989eac65ce7792e") @default(autoincrement())
+  createdAt                   DateTime                   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                   DateTime                   @default(now()) @map("updated_at") @db.Timestamptz(6)
+  userId                      Int?                       @map("user_id")
+  adminMonthlySurveyHistoryId Int?                       @map("admin_monthly_survey_history_id")
+  user                        User?                      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_7fd388c5bd13aef8fb6c3427f29")
+  adminMonthlySurveyHistory   AdminMonthlySurveyHistory? @relation(fields: [adminMonthlySurveyHistoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_af3c1379e78c573fb707f402489")
+
+  @@map("user_monthly_survey_answers")
+}
+
+model User {
+  id                         Int                       @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @default(autoincrement())
+  firstName                  String                    @map("first_name") @db.VarChar
+  lastName                   String                    @map("last_name") @db.VarChar
+  email                      String                    @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar
+  password                   String                    @db.VarChar
+  verificationToken          String?                   @unique @map("verification_token") @db.VarChar
+  verificationTokenExpiredAt DateTime?                 @map("verification_token_expired_at") @db.Timestamptz(6)
+  isPasswordUpdated          Boolean                   @map("is_password_update")
+  role                       Int
+  deletedAt                  DateTime?                 @map("deleted_at") @db.Timestamptz(6)
+  createdAt                  DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                  DateTime                  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  adminId                    Int?                      @unique(map: "REL_f3d6aea8fcca58182b2e80ce97") @map("admin_id")
+  admin                      Admin?                    @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_f3d6aea8fcca58182b2e80ce979")
+  licenseHistories           LicenseHistory[]
+  machineHistories           MachineHistory[]
+  userLicenses               UserLicense[]
+  userMachines               UserMachine[]
+  userMonthlySurveyAnswers   UserMonthlySurveyAnswer[]
+
+  @@map("users")
+}
