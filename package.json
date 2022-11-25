@@ -9,6 +9,11 @@
   },
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.10.15",
+    "@mui/material": "^5.10.15",
+    "@mui/styled-engine-sc": "^5.10.14",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
@@ -30,7 +35,7 @@
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",
     "rxjs": "^7.0.0",
-    "styled-components": "5.3.5",
+    "styled-components": "^5.3.5",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
