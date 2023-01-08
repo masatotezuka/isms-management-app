@@ -6,7 +6,7 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
-    "dev":"npx nx run api:serve & npx nx run client:serve"
+    "dev": "npx nx run api:serve & npx nx run client:serve"
   },
   "private": true,
   "dependencies": {
@@ -59,6 +59,7 @@
     "@nrwl/web": "15.2.1",
     "@nrwl/workspace": "15.2.1",
     "@testing-library/react": "13.4.0",
+    "@types/bcrypt": "^5.0.0",
     "@types/jest": "28.1.1",
     "@types/node": "16.11.7",
     "@types/react": "18.0.20",
