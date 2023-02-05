@@ -14,7 +14,7 @@ import { addHours } from 'date-fns';
 // import { OnEvent } from '@nestjs/event-emitter';
 // import { ResetPassword } from 'src/sendgrid/mails/resetPassword.mail';
 import { User, Admin } from '@prisma/client';
-import { PrismaService } from '../../prisma.service';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class AdminService {

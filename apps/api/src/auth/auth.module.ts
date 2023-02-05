@@ -8,7 +8,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { ConfigModule } from '@nestjs/config';
 import * as dotenv from 'dotenv';
-import { PrismaService } from '../../prisma.service';
+import { PrismaService } from '../prisma.service';
 dotenv.config();
 
 @Module({
