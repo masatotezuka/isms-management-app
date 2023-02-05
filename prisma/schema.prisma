@@ -11,14 +11,11 @@ datasource db {
 }
 
 model LicenseHistory {
-  id          Int      @id(map: "PK_f7e3f66b3855d8604968753d1ed") @default(autoincrement())
-  usageStatus String   @map("usage_status") @db.VarChar
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
-  userId      Int?
-  licenseId   Int?
-  license     License? @relation(fields: [licenseId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_38367e0d1c08e72c6dcbb84b807")
-  user        User?    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_575d0a58e0c332892659055e8dc")
+  id        Int      @id(map: "PK_f7e3f66b3855d8604968753d1ed") @default(autoincrement())
+  remarks   String   @map("remarks") @db.VarChar
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  licenseId Int
+  license   License? @relation(fields: [licenseId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_38367e0d1c08e72c6dcbb84b807")
 
   @@map("license_histories")
 }
@@ -27,6 +24,7 @@ model License {
   id               Int              @id(map: "PK_da5021501ce80efa03de6f40086") @default(autoincrement())
   symbol           String           @db.VarChar
   name             String           @db.VarChar
+  usageStatus      String           @map("usage_status") @db.VarChar
   purchasedAt      DateTime?        @map("purchased_at") @db.Date
   expiredAt        DateTime?        @map("expired_at") @db.Date
   deletedAt        DateTime?        @map("deleted_at") @db.Timestamptz(6)
@@ -41,14 +39,11 @@ model License {
 }
 
 model MachineHistory {
-  id          Int      @id(map: "PK_6e68d67930a4dd55255acda15e1") @default(autoincrement())
-  usageStatus String   @map("usage_status") @db.VarChar
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
-  userId      Int?     @map("user_id")
-  machineId   Int?     @map("machine_id")
-  machine     Machine? @relation(fields: [machineId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_2e708dadcc9855da6690f6e7199")
-  user        User?    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_66400fe3c634514cdd836d4e4b3")
+  id        Int      @id(map: "PK_6e68d67930a4dd55255acda15e1") @default(autoincrement())
+  remarks   String   @map("remarks") @db.VarChar
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  machineId Int      @map("machine_id")
+  machine   Machine? @relation(fields: [machineId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_2e708dadcc9855da6690f6e7199")
 
   @@map("machine_histories")
 }
@@ -58,6 +53,7 @@ model Machine {
   symbol           String           @db.VarChar
   category         String           @db.VarChar
   name             String           @db.VarChar
+  usageStatus      String           @map("usage_status") @db.VarChar
   purchasedAt      DateTime?        @map("puchased_at") @db.Date
   deletedAt        DateTime?        @map("deleted_at") @db.Timestamptz(6)
   createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
@@ -177,8 +173,6 @@ model User {
   updatedAt                  DateTime                  @default(now()) @map("updated_at") @db.Timestamptz(6)
   adminId                    Int?                      @unique(map: "REL_f3d6aea8fcca58182b2e80ce97") @map("admin_id")
   admin                      Admin?                    @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_f3d6aea8fcca58182b2e80ce979")
-  licenseHistories           LicenseHistory[]
-  machineHistories           MachineHistory[]
   userLicenses               UserLicense[]
   userMachines               UserMachine[]
   userMonthlySurveyAnswers   UserMonthlySurveyAnswer[]

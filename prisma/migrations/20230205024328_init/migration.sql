@@ -1,11 +1,9 @@
 -- CreateTable
 CREATE TABLE "license_histories" (
     "id" SERIAL NOT NULL,
-    "usage_status" VARCHAR NOT NULL,
+    "remarks" VARCHAR NOT NULL,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" INTEGER,
-    "licenseId" INTEGER,
+    "licenseId" INTEGER NOT NULL,
 
     CONSTRAINT "PK_f7e3f66b3855d8604968753d1ed" PRIMARY KEY ("id")
 );
@@ -15,6 +13,7 @@ CREATE TABLE "licenses" (
     "id" SERIAL NOT NULL,
     "symbol" VARCHAR NOT NULL,
     "name" VARCHAR NOT NULL,
+    "usage_status" VARCHAR NOT NULL,
     "purchased_at" DATE,
     "expired_at" DATE,
     "deleted_at" TIMESTAMPTZ(6),
@@ -28,11 +27,9 @@ CREATE TABLE "licenses" (
 -- CreateTable
 CREATE TABLE "machine_histories" (
     "id" SERIAL NOT NULL,
-    "usage_status" VARCHAR NOT NULL,
+    "remarks" VARCHAR NOT NULL,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "user_id" INTEGER,
-    "machine_id" INTEGER,
+    "machine_id" INTEGER NOT NULL,
 
     CONSTRAINT "PK_6e68d67930a4dd55255acda15e1" PRIMARY KEY ("id")
 );
@@ -43,6 +40,7 @@ CREATE TABLE "machines" (
     "symbol" VARCHAR NOT NULL,
     "category" VARCHAR NOT NULL,
     "name" VARCHAR NOT NULL,
+    "usage_status" VARCHAR NOT NULL,
     "puchased_at" DATE,
     "deleted_at" TIMESTAMPTZ(6),
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -176,16 +174,10 @@ CREATE UNIQUE INDEX "REL_f3d6aea8fcca58182b2e80ce97" ON "users"("admin_id");
 ALTER TABLE "license_histories" ADD CONSTRAINT "FK_38367e0d1c08e72c6dcbb84b807" FOREIGN KEY ("licenseId") REFERENCES "licenses"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "license_histories" ADD CONSTRAINT "FK_575d0a58e0c332892659055e8dc" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE "licenses" ADD CONSTRAINT "FK_4cf8941abbe3057dcface62688f" FOREIGN KEY ("admin_id") REFERENCES "admins"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "machine_histories" ADD CONSTRAINT "FK_2e708dadcc9855da6690f6e7199" FOREIGN KEY ("machine_id") REFERENCES "machines"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "machine_histories" ADD CONSTRAINT "FK_66400fe3c634514cdd836d4e4b3" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "machines" ADD CONSTRAINT "FK_0e00fc2bf076a4cbf59f5449d14" FOREIGN KEY ("admin_id") REFERENCES "admins"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
