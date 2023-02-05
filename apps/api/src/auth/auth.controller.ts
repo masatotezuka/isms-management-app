@@ -8,7 +8,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
   @Post('login')
   async login(
-    @Body() credentialsDto: CredentialsDto,
+    @Body() credentialsDto: CredentialsDto
   ): Promise<{ accessToken: string; userId: number }> {
     return await this.authService.login(credentialsDto);
   }
