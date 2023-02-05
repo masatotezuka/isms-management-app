@@ -19,11 +19,7 @@ export class MachineController {
   ) {
     console.log(typeof createMachineDto.userId);
     console.log('adminId' + adminId);
-    this.machineService.create(createMachineDto, adminId);
-  }
-  @Get()
-  async fetch() {
-    console.log('test');
-    return 'test';
+    const data = await this.machineService.create(createMachineDto, adminId);
+    return data;
   }
 }
