@@ -4,10 +4,11 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Put,
   Post,
 } from '@nestjs/common';
 import { MachineService } from './machine.service';
-import { CreateMachineDto } from './dto';
+import { CreateMachineDto, UpdateMachineDto } from './dto';
 @Controller('machine')
 export class MachineController {
   constructor(private readonly machineService: MachineService) {}
@@ -17,8 +18,6 @@ export class MachineController {
     @Param('adminId', ParseIntPipe) adminId: number,
     @Body() createMachineDto: CreateMachineDto
   ) {
-    console.log(typeof createMachineDto.userId);
-    console.log('adminId' + adminId);
     const data = await this.machineService.create(createMachineDto, adminId);
     return data;
   }
@@ -26,5 +25,10 @@ export class MachineController {
   async fetchByAdminId(@Param('adminId', ParseIntPipe) adminId: number) {
     const data = await this.machineService.fetchByAdminId(adminId);
     return data;
+  }
+
+  @Put()
+  async update(@Body() updateMachine: UpdateMachineDto) {
+    return await this.machineService.update(updateMachine);
   }
 }

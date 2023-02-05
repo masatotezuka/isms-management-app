@@ -31,9 +31,11 @@ model License {
   createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime         @default(now()) @map("updated_at") @db.Timestamptz(6)
   adminId          Int?             @map("admin_id")
+  userId           Int?             @map("user_id")
   admin            Admin?           @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_4cf8941abbe3057dcface62688f")
+  user             User?            @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   licenseHistories LicenseHistory[]
-  userLicense      UserLicense?
+  // userLicense      UserLicense?
 
   @@map("licenses")
 }
@@ -59,9 +61,10 @@ model Machine {
   createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime         @default(now()) @map("updated_at") @db.Timestamptz(6)
   adminId          Int?             @map("admin_id")
+  userId           Int?             @map("user_id")
   admin            Admin?           @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0e00fc2bf076a4cbf59f5449d14")
+  user             User?            @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   machineHistories MachineHistory[]
-  userMachines     UserMachine?
 
   @@map("machines")
 }
@@ -120,32 +123,6 @@ model Admin {
   @@map("admins")
 }
 
-model UserLicense {
-  id        Int       @id(map: "PK_f9fdeafeac79f9c3ef6acbca1f2") @default(autoincrement())
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
-  userId    Int?      @map("user_id")
-  licenseId Int?      @unique() @map("license_id")
-  user      User?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_1f236ee512d052a2d30b16ca88c")
-  license   License?  @relation(fields: [licenseId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_58676d44946231dc974adc3ac7a")
-
-  @@map("user_licenses")
-}
-
-model UserMachine {
-  id        Int       @id(map: "PK_f16d4070d0c9b64ed9db4c86e3b") @default(autoincrement())
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
-  userId    Int?      @map("user_id")
-  machineId Int?      @unique() @map("machine_id")
-  user      User?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_23686370ce613154537877407d7")
-  machine   Machine?  @relation(fields: [machineId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_5edc031f5f5034ff19b34eadd93")
-
-  @@map("user_machines")
-}
-
 model UserMonthlySurveyAnswer {
   id                          Int                        @id(map: "PK_806bfcf4cd92989eac65ce7792e") @default(autoincrement())
   createdAt                   DateTime                   @default(now()) @map("created_at") @db.Timestamptz(6)
@@ -173,8 +150,8 @@ model User {
   updatedAt                  DateTime                  @default(now()) @map("updated_at") @db.Timestamptz(6)
   adminId                    Int?                      @unique(map: "REL_f3d6aea8fcca58182b2e80ce97") @map("admin_id")
   admin                      Admin?                    @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_f3d6aea8fcca58182b2e80ce979")
-  userLicenses               UserLicense[]
-  userMachines               UserMachine[]
+  license                    License[]
+  machine                    Machine[]
   userMonthlySurveyAnswers   UserMonthlySurveyAnswer[]
 
   @@map("users")
