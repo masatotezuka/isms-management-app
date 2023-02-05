@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Put,
   Post,
+  Delete,
 } from '@nestjs/common';
 import { MachineService } from './machine.service';
 import { CreateMachineDto, UpdateMachineDto } from './dto';
@@ -30,5 +31,10 @@ export class MachineController {
   @Put()
   async update(@Body() updateMachine: UpdateMachineDto) {
     return await this.machineService.update(updateMachine);
+  }
+
+  @Delete(':machineId')
+  async delete(@Param('machineId', ParseIntPipe) machineId: number) {
+    return await this.machineService.delete(machineId);
   }
 }

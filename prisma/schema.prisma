@@ -35,7 +35,6 @@ model License {
   admin            Admin?           @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_4cf8941abbe3057dcface62688f")
   user             User?            @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   licenseHistories LicenseHistory[]
-  // userLicense      UserLicense?
 
   @@map("licenses")
 }
@@ -45,7 +44,7 @@ model MachineHistory {
   remarks   String   @map("remarks") @db.VarChar
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   machineId Int      @map("machine_id")
-  machine   Machine? @relation(fields: [machineId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_2e708dadcc9855da6690f6e7199")
+  machine   Machine? @relation(fields: [machineId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("machine_histories")
 }

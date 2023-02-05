@@ -54,4 +54,11 @@ export class MachineService {
       return updatedMachine;
     });
   }
+
+  async delete(machineId: number) {
+    const result = await this.prisma.machine.delete({
+      where: { id: machineId },
+    });
+    return result;
+  }
 }
