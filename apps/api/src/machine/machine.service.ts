@@ -27,4 +27,14 @@ export class MachineService {
       return newMachine;
     });
   }
+
+  async fetchByAdminId(adminId: number) {
+    const data = await this.prisma.machine.findMany({
+      where: { adminId: adminId },
+      include: {
+        userMachines: { include: { user: true } },
+      },
+    });
+    return data;
+  }
 }

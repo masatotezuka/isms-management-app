@@ -22,4 +22,9 @@ export class MachineController {
     const data = await this.machineService.create(createMachineDto, adminId);
     return data;
   }
+  @Get(':adminId')
+  async fetchByAdminId(@Param('adminId', ParseIntPipe) adminId: number) {
+    const data = await this.machineService.fetchByAdminId(adminId);
+    return data;
+  }
 }
